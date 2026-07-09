@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Americans Who Should Be Famous</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;900&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08090c;
+  --bg2: #0e1018;
+  --gold: #d4a843;
+  --gold2: #8a6820;
+  --text: #ddd8cc;
+  --dim: #5a5650;
+  --panel: rgba(8,9,12,0.96);
+
+  --Heroes:        #4a8fd4;
+  --Innovators:    #e8a838;
+  --Entertainment: #d45a8a;
+  --Business:      #48c97a;
+  --Healers:       #6cbfcc;
+  --Teachers:      #a07be0;
+  --Athletes:      #e06840;
+  --Villains:      #d44040;
+  --Pioneers:      #70b870;
+  --Influencers:   #c890d8;
+  --Spies:         #889898;
+  --Aviators:      #80b8e8;
+  --Science:       #f0d060;
+  --Statesman:     #98b0d8;
+  --Music:         #f090a0;
+  --Ghost:         #383838;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  overflow: hidden;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--text);
+}
+
+/* ── HEADER ── */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 16px 28px 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  background: linear-gradient(to bottom, rgba(8,9,12,0.98) 70%, transparent);
+  pointer-events: none;
+}
+#header h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+#header p {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--dim);
+  letter-spacing: 0.08em;
+}
+
+/* ── CANVAS ── */
+#canvas-wrap {
+  position: fixed;
+  inset: 0;
+  cursor: grab;
+}
+#canvas-wrap:active { cursor: grabbing; }
+canvas { display: block; width: 100%; height: 100%; }
+
+/* ── TOOLTIP ── */
+#tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.12s;
+  max-width: 260px;
+}
+.tip-inner {
+  background: rgba(8,9,12,0.97);
+  border: 1px solid var(--gold2);
+  padding: 10px 14px;
+  border-radius: 2px;
+}
+.tip-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.tip-cats {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+.tip-hl {
+  font-size: 0.78rem;
+  color: var(--text);
+  font-style: italic;
+  line-height: 1.4;
+}
+.tip-ghost {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: #555;
+  margin-top: 4px;
+}
+.tip-click {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  color: var(--gold2);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+/* ── LEGEND ── */
+#legend {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.leg {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+}
+.leg-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── CONTROLS ── */
+#controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ctrl-btn {
+  width: 32px; height: 32px;
+  background: rgba(14,16,24,0.9);
+  border: 1px solid var(--gold2);
+  color: var(--gold);
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.ctrl-btn:hover { background: rgba(212,168,67,0.12); }
+
+/* ── SEARCH ── */
+#search-wrap {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 50;
+}
+#search {
+  background: rgba(14,16,24,0.9);
+  border: 1px solid var(--gold2);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  padding: 6px 12px;
+  border-radius: 2px;
+  width: 200px;
+  outline: none;
+  letter-spacing: 0.06em;
+}
+#search::placeholder { color: var(--dim); }
+#search:focus { border-color: var(--gold); }
+
+/* ── PERSON OVERLAY ── */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(4,5,8,0.7);
+  backdrop-filter: blur(4px);
+}
+#overlay.open { display: block; }
+
+#panel {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: min(680px, 100%);
+  background: #08090c;
+  border-left: 1px solid #1e1e28;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.22,1,0.36,1);
+}
+#overlay.open #panel { transform: translateX(0); }
+
+#panel-hero {
+  padding: 48px 44px 40px;
+  border-bottom: 1px solid #1a1a22;
+}
+#panel-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: #5a5650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: none;
+  border: none;
+  margin-bottom: 28px;
+  transition: color 0.2s;
+  padding: 0;
+}
+#panel-close:hover { color: #d4a843; }
+#panel-badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.p-badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+#panel-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 900;
+  color: #ddd8cc;
+  line-height: 1.08;
+  margin-bottom: 14px;
+}
+#panel-hl {
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.55;
+  max-width: 560px;
+}
+#panel-body { padding: 40px 44px 80px; }
+.p-section { margin-bottom: 40px; }
+.p-section h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #5a5650;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #1a1a22;
+  padding-bottom: 9px;
+  margin-bottom: 18px;
+}
+.p-ext-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border: 1px solid;
+  border-radius: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: all 0.18s;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+.p-conn-grid { display: flex; flex-wrap: wrap; gap: 9px; }
+.p-conn-chip {
+  padding: 7px 14px;
+  border-radius: 2px;
+  border: 1px solid;
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.p-conn-chip:hover { background: rgba(255,255,255,0.05); }
+.p-conn-chip.ghost { opacity: 0.35; cursor: default; }
+.p-conn-name {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+}
+.p-conn-cat {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.56rem;
+  color: #5a5650;
+  letter-spacing: 0.06em;
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <h1>Americans Who Should Be Famous</h1>
+  <p>click a node to explore · drag to pan · scroll to zoom</p>
+</div>
+
+<div id="search-wrap">
+  <input id="search" type="text" placeholder="search a name…">
+</div>
+
+<div id="canvas-wrap">
+  <canvas id="c"></canvas>
+</div>
+
+<div id="tooltip"><div class="tip-inner">
+  <div class="tip-name" id="tip-name"></div>
+  <div class="tip-cats" id="tip-cats"></div>
+  <div class="tip-hl"   id="tip-hl"></div>
+  <div class="tip-ghost" id="tip-ghost"></div>
+  <div class="tip-click" id="tip-click"></div>
+</div></div>
+
+<div id="legend"></div>
+
+<!-- PERSON OVERLAY PANEL -->
+<div id="overlay">
+  <div id="panel">
+    <div id="panel-hero">
+      <button id="panel-close">← Close</button>
+      <div id="panel-badges"></div>
+      <div id="panel-name"></div>
+      <div id="panel-hl"></div>
+    </div>
+    <div id="panel-body"></div>
+  </div>
+</div>
+
+<div id="controls">
+  <button class="ctrl-btn" id="zoom-in" title="Zoom in">+</button>
+  <button class="ctrl-btn" id="zoom-out" title="Zoom out">−</button>
+  <button class="ctrl-btn" id="reset" title="Reset view">⌂</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const CAT_COLOR = {
+  Heroes:        '#4a8fd4',
+  Innovators:    '#e8a838',
+  Entertainment: '#d45a8a',
+  Business:      '#48c97a',
+  Healers:       '#6cbfcc',
+  Teachers:      '#a07be0',
+  Athletes:      '#e06840',
+  Villains:      '#d44040',
+  Pioneers:      '#70b870',
+  Influencers:   '#c890d8',
+  Spies:         '#889898',
+  Aviators:      '#80b8e8',
+  Science:       '#f0d060',
+  Statesman:     '#98b0d8',
+  Music:         '#f090a0',
+};
+
+const PEOPLE = [
+  { name:"Saul Alinsky",         cats:["Villains","Influencers"],  hl:"'The issue is never the issue.' Political organizer; dedicated 'Rules for Radicals' to Lucifer", wiki:true, connections:["Obama"] },
+  { name:"Apollo 8 Astronauts",  cats:["Pioneers","Heroes"],       hl:"Frank Borman, James Lovell, and William Anders", wiki:false, connections:[] },
+  { name:"Roone Arledge",        cats:["Innovators"],              hl:"Before there was cable TV, he invented it", wiki:true, connections:[] },
+  { name:"Leo Baekeland",        cats:["Innovators","Business"],   hl:"Father of the plastics industry — in Yonkers of all places", wiki:true, connections:[] },
+  { name:"Clara Barton",         cats:["Healers"],                 hl:"Pioneering nurse, founder of the Red Cross", wiki:true, connections:[] },
+  { name:"John Basilone",        cats:["Heroes","Pioneers"],       hl:"Hero of Guadalcanal, died on Iwo Jima — he didn't have to go back but he did", wiki:true, connections:["Clara Barton"] },
+  { name:"Alfred Blalock",       cats:["Healers"],                 hl:"With Vivien Thomas, pioneers in heart surgery and race relations", wiki:true, connections:["Vivien Thomas"] },
+  { name:"Mel Blanc",            cats:["Innovators","Entertainment"], hl:"What's up doc! Best voice actor ever; Best character actor ever", wiki:true, connections:[] },
+  { name:"Nellie Bly",           cats:["Teachers"],                hl:"Muckraking journalist, inventor, adventurer", wiki:true, connections:[] },
+  { name:"Norman Borlaug",       cats:["Innovators","Healers"],    hl:"Found ways to increase crop yields hugely; credited with saving over a billion people from starvation", wiki:true, connections:[] },
+  { name:"John Boyd",            cats:["Aviators","Heroes"],       hl:"The original Maverick: jet designer, military strategist. His plan won the first Gulf War", wiki:true, connections:["Dick Cheney"] },
+  { name:"Dan Bricklin",         cats:["Innovators"],              hl:"Invented the spreadsheet; would have been bigger than Bill Gates had patent laws changed sooner", wiki:true, connections:[] },
+  { name:"Georgia 'Tiny' Broadwick", cats:["Aviators","Pioneers"],hl:"4'8\", 85 lbs — pioneering parachutist who invented the ripcord. Trained WWII paratroopers", wiki:true, connections:[] },
+  { name:"Leo Burnett",          cats:["Business"],                hl:"Advertising genius", wiki:false, connections:[] },
+  { name:"Vannevar Bush",        cats:["Innovators","Influencers"],hl:"USA's chief scientist in WWII, created the Manhattan Project. His 'Memex' prefigured the internet", wiki:true, connections:["Claude Shannon","Robert Goddard","John von Neumann"] },
+  { name:"Willis Carrier",       cats:["Innovators","Business"],   hl:"Father of air conditioning — in Syracuse of all places", wiki:true, connections:[] },
+  { name:"James Casey",          cats:["Business"],                hl:"Orphan who founded UPS; built orphanages with his profits", wiki:true, connections:[] },
+  { name:"Joshua Chamberlain",   cats:["Heroes","Pioneers"],       hl:"Hero of Little Round Top at Gettysburg; saved the Union left flank", wiki:false, connections:[] },
+  { name:"Paul Cravath",         cats:["Business"],                hl:"Westinghouse's legal general in the AC/DC wars; created the BigLaw firm paradigm", wiki:true, connections:["George Westinghouse"] },
+  { name:"W. Edwards Deming",    cats:["Business","Teachers"],     hl:"Used statistical methods to improve manufacturing; Japan was an early adopter", wiki:true, connections:[] },
+  { name:"Jimmy Doolittle",      cats:["Aviators","Heroes"],       hl:"Speed records, invented instrument flying, then led the daring Raid on Tokyo", wiki:true, connections:["FDR"] },
+  { name:"Allen Dulles",         cats:["Villains","Spies"],        hl:"CIA spymaster who toppled governments; gave us MK Ultra, Bay of Pigs, and Vietnam", wiki:true, connections:["JFK","Eisenhower","Wernher von Braun","Whitey Bulger"] },
+  { name:"Peter Ellis",          cats:["Heroes","Pioneers"],       hl:"Father of Amphibious Warfare", wiki:false, connections:["Curtis LeMay"] },
+  { name:"Philo Farnsworth",     cats:["Innovators"],              hl:"Invented television; never made a dime from it", wiki:true, connections:[] },
+  { name:"Chuck Feeney",         cats:["Business","Innovators"],   hl:"Made billions with Duty Free shops, then gave it all away in secret", wiki:true, connections:[] },
+  { name:"Albert Fish",          cats:["Villains"],                hl:"One of America's most notorious serial killers", wiki:true, connections:[] },
+  { name:"Joe Flom",             cats:["Business","Innovators"],   hl:"Transformed BigLaw; invented the modern hostile takeover defense", wiki:false, connections:[] },
+  { name:"Robert Goddard",       cats:["Innovators","Pioneers"],   hl:"Pioneer in rocketry; Vannevar Bush's skepticism gave the advantage to von Braun", wiki:true, connections:["Vannevar Bush","Wernher von Braun"] },
+  { name:"Bill Hambrecht",       cats:["Business","Innovators"],   hl:"Financed little start-ups, like Google", wiki:false, connections:[] },
+  { name:"George Harsh",         cats:["Heroes"],                  hl:"Preppy bandit who atoned for his sins", wiki:false, connections:[] },
+  { name:"John Hersey",          cats:["Influencers","Teachers"],  hl:"His JFK profile changed history; his book Hiroshima changed how we think about nuclear war", wiki:true, connections:["JFK"] },
+  { name:"Tommy Hitchcock",      cats:["Aviators","Heroes"],       hl:"Fictional villain in Gatsby; real-life war hero in WWI and WWII. Put the Rolls Royce engine in the P-51", wiki:false, connections:["The Mellons"] },
+  { name:"John Philip Holland",  cats:["Innovators"],              hl:"Irish monk turned Fenian rebel who invented the modern submarine", wiki:true, connections:[] },
+  { name:"Charles Hamilton Houston", cats:["Influencers","Pioneers"], hl:"Civil rights lawyer whose strategy ended 'separate but equal.' Died before Brown v. Board", wiki:true, connections:["Thurgood Marshall"] },
+  { name:"John Hughes",          cats:["Influencers","Pioneers"],  hl:"First archbishop of NYC; fought the Know Nothings, built parochial schools, founded Fordham", wiki:true, connections:[] },
+  { name:"James Jamerson",       cats:["Music","Pioneers"],        hl:"#1 bass player ever. Motown house bassist; more #1 hits than the Beatles and Elvis combined", wiki:true, connections:[] },
+  { name:"Kelly Johnson",        cats:["Innovators","Aviators"],   hl:"Head designer at Lockheed's Skunk Works; created the U-2, SR-71 Blackbird, stealth technology", wiki:true, connections:[] },
+  { name:"John B. Kelly Sr.",    cats:["Athletes","Pioneers"],     hl:"Best rower of his era; the Brits barred him from Henley for being a bricklayer. Father of Grace Kelly", wiki:true, connections:["Grace Kelly"] },
+  { name:"Robert Giroux",        cats:["Influencers"],             hl:"Editor who brought Orwell to the US", wiki:false, connections:[] },
+  { name:"Frances Glessner Lee", cats:["Innovators","Pioneers"],   hl:"Mother of modern forensic science — gave us all those CSI shows", wiki:true, connections:[] },
+  { name:"Thomas Gold",          cats:["Innovators","Influencers"],hl:"Polymath; proponent of abiogenic formation of fossil fuels", wiki:true, connections:[] },
+  { name:"Pete Hamill",          cats:["Influencers"],             hl:"Tabloid maven; Editor-in-chief of the NY Daily News and the NY Post", wiki:false, connections:[] },
+  { name:"Lawrence Kasdan",      cats:["Entertainment"],           hl:"Wrote the scripts for the early Star Wars films and created Indiana Jones", wiki:true, connections:[] },
+  { name:"Fred Koch",            cats:["Business","Pioneers"],     hl:"Pioneer in oil refining. Worked for Stalin; came back a fierce anti-Communist. Father of the Koch brothers", wiki:true, connections:["Koch Brothers"] },
+  { name:"Percy Julian",         cats:["Innovators","Pioneers"],   hl:"Fundamental discoveries in steroids; one of the first Black Americans to earn a Chemistry PhD", wiki:true, connections:[] },
+  { name:"Hedy Lamarr",          cats:["Innovators","Entertainment"], hl:"\"That's Hedy!\" Actress who co-invented spread-spectrum radio — forerunner of WiFi and GPS", wiki:true, connections:[] },
+  { name:"Owney Madden",         cats:["Villains","Business"],     hl:"NYC prohibition gangster; created the Cotton Club; turned Hot Springs into a gambling mecca", wiki:false, connections:["Lucky Luciano","Duke Ellington","Nicholas Brothers"] },
+  { name:"Katherine McCormick",  cats:["Innovators","Influencers"],hl:"Heiress went to MIT; used her money to fund the invention of the birth control pill", wiki:false, connections:[] },
+  { name:"Malcolm McLean",       cats:["Business","Innovators"],   hl:"Invented container shipping, which revolutionized global trade", wiki:true, connections:[] },
+  { name:"Gordon Moore",         cats:["Innovators","Business"],   hl:"Created Silicon Valley, in work and deed", wiki:false, connections:[] },
+  { name:"Robert Moses",         cats:["Statesman"],               hl:"Never elected, yet the most powerful figure in New York for decades", wiki:true, connections:["Jane Jacobs"] },
+  { name:"John von Neumann",     cats:["Innovators","Influencers"],hl:"Polymath; smarter than Einstein; told better jokes too", wiki:true, connections:["Vannevar Bush"] },
+  { name:"Nicholas Brothers",    cats:["Entertainment","Music"],   hl:"The greatest dancers ever. Stars of the Cotton Club", wiki:true, connections:[] },
+  { name:"Frank Nugent",         cats:["Entertainment"],           hl:"Film critic turned screenwriter; wrote The Searchers and The Quiet Man", wiki:true, connections:[] },
+  { name:"Al Oerter",            cats:["Athletes"],                hl:"Four consecutive Olympic gold medals in the discus — each time a personal best", wiki:true, connections:[] },
+  { name:"Frederick Law Olmsted",cats:["Pioneers","Influencers"],  hl:"Preeminent landscape architect; gave us Central Park and Boston's Emerald Necklace", wiki:true, connections:[] },
+  { name:"Elisha Otis",          cats:["Business","Pioneers"],     hl:"Father of the elevator industry — in Yonkers of all places", wiki:true, connections:[] },
+  { name:"Owsley Stanley",       cats:["Influencers"],             hl:"Made pure LSD in million-dose batches, fueling the 60s San Francisco scene. Bankrolled the Grateful Dead", wiki:false, connections:["Grateful Dead"] },
+  { name:"Quanah Parker",        cats:["Heroes","Villains"],       hl:"Last Chief of the Comanches, the greatest horse warriors in history. His mother inspired The Searchers", wiki:true, connections:[] },
+  { name:"Chesty Puller",        cats:["Heroes"],                  hl:"The most decorated Marine in US history", wiki:false, connections:[] },
+  { name:"Mike Quill",           cats:["Influencers"],             hl:"NYC labor leader who united Irish and Black transit workers; his 1964 strike changed municipal unions nationwide", wiki:true, connections:["John Vliet Lindsay"] },
+  { name:"Cecilia Payne-Gaposchkin", cats:["Innovators","Science"],hl:"Her 1925 doctoral thesis proved stars are made of hydrogen and helium. No one believed her", wiki:true, connections:[] },
+  { name:"Michael Milken",       cats:["Business","Innovators"],   hl:"The Junk Bond King; created the high-yield bond market and got jailed for it", wiki:true, connections:["Rudy Giuliani"] },
+  { name:"George P. Mitchell",   cats:["Business","Innovators"],   hl:"Father of fracking; made the US energy independent", wiki:true, connections:[] },
+  { name:"Thomas Francis Meagher",cats:["Heroes"],                 hl:"Irish rebel sentenced to death by the British; escaped to lead NYC's Fighting 69th in the Civil War", wiki:true, connections:[] },
+  { name:"Walter Reed",          cats:["Healers"],                 hl:"Pioneered epidemiology with his work on yellow fever and the mosquito", wiki:true, connections:[] },
+  { name:"Ricky Ricardo",        cats:["Business","Innovators"],   hl:"Pioneered the TV sitcom; he and Lucy spawned TV syndication with Star Trek, Mission Impossible", wiki:true, connections:["Lucille Ball"] },
+  { name:"Jonas Salk",           cats:["Healers","Innovators"],    hl:"Invented the polio vaccine; could have made a fortune in patents but gave it away", wiki:true, connections:[] },
+  { name:"Claude Shannon",       cats:["Innovators","Science"],    hl:"Invented digital computers by having electric switches mimic formal logic", wiki:true, connections:["Vannevar Bush"] },
+  { name:"Robert Smalls",        cats:["Heroes","Pioneers"],       hl:"Enslaved man who stole a Confederate ship to free his family; helped sway Lincoln to Emancipation; US Congressman", wiki:true, connections:["Abe Lincoln"] },
+  { name:"Harriet Beecher Stowe",cats:["Influencers","Pioneers"],  hl:"Abolitionist author of Uncle Tom's Cabin. Lincoln: 'the little woman who started this great war'", wiki:true, connections:[] },
+  { name:"Wernher von Braun",    cats:["Villains","Heroes"],       hl:"'I aim for the stars, but mostly hit London.' Created the V2 and Saturn V. Inspiration for Dr. Strangelove", wiki:true, connections:["Robert Goddard"] },
+  { name:"Kate Warne",           cats:["Heroes","Spies"],          hl:"First woman Pinkerton detective; saved Lincoln from assassination in 1861. Later spied against the Confederacy", wiki:true, connections:["Abe Lincoln"] },
+  { name:"Jack Welch",           cats:["Villains","Business"],     hl:"GE CEO who drove outsourcing to China; many followed his lead", wiki:false, connections:[] },
+  { name:"George Westinghouse",  cats:["Innovators","Pioneers"],   hl:"Fought Edison in the AC/DC wars and won; pivotal to America's industrialization", wiki:true, connections:["Thomas Edison"] },
+  { name:"John C Woods",         cats:["Heroes"],                  hl:"Official US Army hangman who executed Nazi war criminals at Nuremberg", wiki:true, connections:[] },
+  { name:"Carol Kaye",           cats:["Entertainment","Music"],   hl:"#2 bass player ever. Wrecking Crew member; more #1 hits than anyone", wiki:true, connections:[] },
+  { name:"Clive Davis",          cats:["Entertainment","Business"],hl:"Record executive who shaped more superstars than anyone in music history", wiki:true, connections:[] },
+  { name:"Eric Hoffer",          cats:["Teachers","Influencers"],  hl:"Longshoreman philosopher; his True Believer explains mass movements to this day", wiki:true, connections:[] },
+  { name:"Jane Jacobs",          cats:["Statesman","Influencers"], hl:"Pioneering urban activist and nemesis of Robert Moses", wiki:true, connections:["Robert Moses"] },
+  { name:"Josiah Willard Gibbs", cats:["Innovators","Science"],    hl:"'The greatest mind in American history.' Founded modern thermodynamics", wiki:true, connections:[] },
+  { name:"Cyrus McCormick",      cats:["Business","Pioneers"],     hl:"His mechanical reaper revolutionized American farming", wiki:true, connections:[] },
+  { name:"Robert McNamara",      cats:["Villains"],                hl:"Architect of Vietnam War escalation; later admitted the war was a mistake", wiki:true, connections:[] },
+  { name:"Albert A. Michelson",  cats:["Innovators","Science"],    hl:"Physicist who determined the speed of light. He answered what; Einstein answered why", wiki:true, connections:[] },
+  { name:"Emily Warren Roebling",cats:["Heroes","Pioneers"],       hl:"The real builder of the Brooklyn Bridge after her husband was incapacitated", wiki:true, connections:[] },
+  { name:"Walter Reuther",       cats:["Influencers","Heroes"],    hl:"UAW president who built the American middle class through collective bargaining", wiki:true, connections:[] },
+  { name:"John Swartzwelder",    cats:["Entertainment"],           hl:"The most prolific Simpsons writer; wrote 59 episodes and invented countless recurring gags", wiki:false, connections:[] },
+  { name:"Kay Summersby",        cats:["Heroes","Spies"],          hl:"Eisenhower's driver, aide — and rumored wartime love", wiki:false, connections:["Eisenhower"] },
+  { name:"Edith Wilson",         cats:["Heroes","Statesman"],      hl:"Our first woman President — de facto, after Woodrow Wilson's stroke", wiki:true, connections:[] },
+  { name:"Peter Wolf",           cats:["Entertainment","Music"],   hl:"Bronx boy and coolest guy on the planet. Artist, late night DJ, best rock front man ever", wiki:true, connections:[] },
+  { name:"Chuck Yeager",         cats:["Heroes","Aviators"],       hl:"Broke the sound barrier; had the Right Stuff before the term existed", wiki:true, connections:[] },
+  { name:"Harold Ramis",         cats:["Entertainment"],           hl:"Wrote and directed Groundhog Day, Ghostbusters, Animal House, Caddyshack", wiki:true, connections:[] },
+  { name:"James Landis",         cats:["Statesman","Business"],    hl:"New Deal architect; shaped the SEC and America's regulatory framework", wiki:true, connections:[] },
+  { name:"Earl Hancock Ellis",   cats:["Heroes","Pioneers"],       hl:"Predicted the Pacific War with Japan in 1921 with eerie accuracy", wiki:true, connections:[] },
+  { name:"Vivien Thomas",        cats:["Healers","Pioneers"],      hl:"With Alfred Blalock, pioneered open-heart surgery — and broke racial barriers doing it", wiki:true, connections:["Alfred Blalock"] },
+  { name:"Todd Rundgren",        cats:["Entertainment","Music"],   hl:"Not just a musician — a producer extraordinaire. Meatloaf, anyone?", wiki:true, connections:[] },
+  { name:"Ralph Rose",           cats:["Athletes","Heroes"],       hl:"Olympic champion who refused to dip the American flag to the English King, starting the tradition", wiki:true, connections:[] },
+  { name:"Elizabeth Cady Stanton",cats:["Influencers","Pioneers"],hl:"The real architect of women's suffrage, but Susan B. Anthony gets all the credit", wiki:true, connections:[] },
+  { name:"Frederick Douglass",   cats:["Heroes","Influencers"],    hl:"Escaped slavery to become the most influential abolitionist voice in American history", wiki:false, connections:[] },
+  { name:"John Kay",             cats:["Entertainment","Music"],   hl:"Rock 'n Roll orphan, was Born to Be Wild", wiki:true, connections:[] },
+  { name:"Éamon de Valera",      cats:["Heroes","Statesman"],      hl:"Brooklyn-born. First president of the Irish Republic", wiki:true, connections:[] },
+  { name:"Al Kooper",            cats:["Entertainment","Music"],   hl:"The Zelig of rock n' roll — invented the organ riff on Like a Rolling Stone", wiki:true, connections:[] },
+  { name:"Roger Sherman",        cats:["Heroes","Statesman"],      hl:"The Connecticut Compromise: gave small states Senate equality and made our Constitution possible", wiki:true, connections:[] },
+  { name:"Les Paul",             cats:["Innovators","Music"],      hl:"Invented the solid-body electric guitar and multitrack recording", wiki:true, connections:[] },
+  { name:"William Shockley",     cats:["Innovators","Science"],    hl:"Pioneered semiconductors and transistors; gave us the modern world. Controversial eugenics promoter", wiki:true, connections:[] },
+  { name:"John Bingham",         cats:["Heroes","Statesman"],      hl:"Wrote the 14th Amendment — now the basis of half of all Constitutional jurisprudence", wiki:true, connections:[] },
+  { name:"Kurt Gödel",           cats:["Innovators","Science"],    hl:"Proved mathematics cannot prove itself. The Incompleteness Theorems shook the foundations of logic", wiki:false, connections:[] },
+  { name:"Berry Gordy",          cats:["Entertainment","Business"],hl:"Built Motown from nothing; changed American music and culture forever", wiki:true, connections:[] },
+  { name:"William Levitt",       cats:["Business","Pioneers"],     hl:"Creator of suburbia — Levittown changed how America lives", wiki:false, connections:[] },
+  { name:"Nolan Bushnell",       cats:["Innovators","Business"],   hl:"Founded Atari and invented the video game industry", wiki:false, connections:[] },
+  { name:"Madam C.J. Walker",    cats:["Business","Pioneers"],     hl:"First self-made female millionaire in America — built a haircare empire", wiki:false, connections:[] },
+];
+
+// ═══════════════════════════════════════
+// GHOST NODES (connections not in list)
+// ═══════════════════════════════════════
+const mainNames = new Set(PEOPLE.map(p => p.name.toLowerCase()));
+const ghostSet  = new Set();
+PEOPLE.forEach(p => {
+  p.connections.forEach(c => {
+    if (!mainNames.has(c.toLowerCase())) ghostSet.add(c);
+  });
+});
+
+const GHOSTS = Array.from(ghostSet).map(name => ({
+  name, cats: [], hl: '', wiki: false, connections: [], isGhost: true
+}));
+
+const ALL_NODES = [...PEOPLE.map(p => ({...p, isGhost: false})), ...GHOSTS];
+
+// Build edges
+const EDGES = [];
+const nameMap = {};
+ALL_NODES.forEach((n, i) => { nameMap[n.name.toLowerCase()] = i; });
+
+PEOPLE.forEach((p, i) => {
+  p.connections.forEach(c => {
+    const j = nameMap[c.toLowerCase()];
+    if (j !== undefined && j !== i) {
+      EDGES.push([i, j]);
+    }
+  });
+});
+
+// ═══════════════════════════════════════
+// PHYSICS (force-directed)
+// ═══════════════════════════════════════
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+const wrap   = document.getElementById('canvas-wrap');
+
+let W, H;
+let tx = 0, ty = 0, scale = 1;
+let dragging = false, dragStart = null, txStart, tyStart;
+let hoveredIdx = -1;
+let highlighted = new Set(); // indices highlighted by search
+
+// Node physics state
+let pos  = []; // {x, y}
+let vel  = []; // {x, y}
+let pinned = []; // bool
+
+function initPhysics() {
+  W = wrap.clientWidth;
+  H = wrap.clientHeight;
+  canvas.width  = W;
+  canvas.height = H;
+  tx = W / 2;
+  ty = H / 2;
+
+  const n = ALL_NODES.length;
+  pos   = [];
+  vel   = [];
+  pinned= [];
+  for (let i = 0; i < n; i++) {
+    const angle = (i / n) * Math.PI * 2;
+    const r = Math.min(W, H) * 0.3;
+    pos.push({ x: r * Math.cos(angle) + (Math.random()-0.5)*40,
+               y: r * Math.sin(angle) + (Math.random()-0.5)*40 });
+    vel.push({ x: 0, y: 0 });
+    pinned.push(false);
+  }
+}
+
+function nodeRadius(node) {
+  if (node.isGhost) return 5;
+  const deg = EDGES.filter(([a,b]) => a === ALL_NODES.indexOf(node) || b === ALL_NODES.indexOf(node)).length;
+  return 7 + Math.sqrt(deg) * 2;
+}
+
+let simRunning = true;
+function stepPhysics() {
+  if (!simRunning) return;
+  const n = ALL_NODES.length;
+  const k  = 80;   // spring rest length
+  const kg = 1200; // repulsion
+  const dt = 0.6;
+  const damp = 0.82;
+
+  // Reset forces
+  const fx = new Float32Array(n);
+  const fy = new Float32Array(n);
+
+  // Repulsion (Barnes-Hut approximation skipped for simplicity)
+  for (let i = 0; i < n; i++) {
+    for (let j = i+1; j < n; j++) {
+      const dx = pos[i].x - pos[j].x;
+      const dy = pos[i].y - pos[j].y;
+      const d2 = dx*dx + dy*dy + 0.01;
+      const d  = Math.sqrt(d2);
+      const f  = kg / d2;
+      const nx = dx/d, ny = dy/d;
+      fx[i] += f * nx; fy[i] += f * ny;
+      fx[j] -= f * nx; fy[j] -= f * ny;
+    }
+  }
+
+  // Spring attraction along edges
+  EDGES.forEach(([a, b]) => {
+    const dx = pos[b].x - pos[a].x;
+    const dy = pos[b].y - pos[a].y;
+    const d  = Math.sqrt(dx*dx + dy*dy) + 0.01;
+    const f  = (d - k) * 0.04;
+    const nx = dx/d, ny = dy/d;
+    fx[a] += f * nx; fy[a] += f * ny;
+    fx[b] -= f * nx; fy[b] -= f * ny;
+  });
+
+  // Center gravity
+  for (let i = 0; i < n; i++) {
+    fx[i] -= pos[i].x * 0.008;
+    fy[i] -= pos[i].y * 0.008;
+  }
+
+  // Integrate
+  let totalKE = 0;
+  for (let i = 0; i < n; i++) {
+    if (pinned[i]) { vel[i].x = 0; vel[i].y = 0; continue; }
+    vel[i].x = (vel[i].x + fx[i] * dt) * damp;
+    vel[i].y = (vel[i].y + fy[i] * dt) * damp;
+    pos[i].x += vel[i].x * dt;
+    pos[i].y += vel[i].y * dt;
+    totalKE += vel[i].x*vel[i].x + vel[i].y*vel[i].y;
+  }
+
+  // Stop sim when settled
+  if (totalKE < 0.5) simRunning = false;
+}
+
+// ═══════════════════════════════════════
+// DRAW
+// ═══════════════════════════════════════
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return {r,g,b};
+}
+
+function drawSplitCircle(cx, cy, r, c1, c2) {
+  // Draw two half-circles
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, -Math.PI/2, Math.PI/2);
+  ctx.closePath();
+  ctx.fillStyle = c1;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, Math.PI/2, -Math.PI/2);
+  ctx.closePath();
+  ctx.fillStyle = c2;
+  ctx.fill();
+  ctx.restore();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(tx, ty);
+  ctx.scale(scale, scale);
+
+  // Edges
+  EDGES.forEach(([a, b]) => {
+    const pa = pos[a], pb = pos[b];
+    const na = ALL_NODES[a], nb = ALL_NODES[b];
+    const isHov = (a === hoveredIdx || b === hoveredIdx);
+    const isHl  = highlighted.size > 0 && (highlighted.has(a) || highlighted.has(b));
+
+    ctx.beginPath();
+    ctx.moveTo(pa.x, pa.y);
+    ctx.lineTo(pb.x, pb.y);
+
+    if (isHov) {
+      ctx.strokeStyle = '#d4a84388';
+      ctx.lineWidth = 1.5 / scale;
+    } else if (highlighted.size > 0 && !isHl) {
+      ctx.strokeStyle = '#ffffff08';
+      ctx.lineWidth = 0.5 / scale;
+    } else {
+      const col = na.cats[0] ? CAT_COLOR[na.cats[0]] || '#888' : '#444';
+      const rgb = hexToRgb(col);
+      ctx.strokeStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.22)`;
+      ctx.lineWidth = 0.8 / scale;
+    }
+    ctx.stroke();
+  });
+
+  // Nodes
+  ALL_NODES.forEach((node, i) => {
+    const {x, y} = pos[i];
+    const r = nodeRadius(node);
+    const isHov = i === hoveredIdx;
+    const isHl  = highlighted.has(i);
+    const isDim  = highlighted.size > 0 && !isHl && !isHov;
+
+    ctx.globalAlpha = isDim ? 0.18 : 1;
+
+    if (node.isGhost) {
+      // Ghost node
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI*2);
+      ctx.fillStyle   = '#2a2a2a';
+      ctx.fill();
+      ctx.strokeStyle = '#444';
+      ctx.lineWidth   = 0.8 / scale;
+      ctx.stroke();
+    } else {
+      const c1 = CAT_COLOR[node.cats[0]] || '#888';
+      const c2 = node.cats[1] ? (CAT_COLOR[node.cats[1]] || c1) : c1;
+
+      // Glow
+      if (isHov || isHl) {
+        const rgb = hexToRgb(c1);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5);
+        g.addColorStop(0, `rgba(${rgb.r},${rgb.g},${rgb.b},0.4)`);
+        g.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(x, y, r * 2.5, 0, Math.PI*2);
+        ctx.fillStyle = g;
+        ctx.fill();
+      }
+
+      // Node body
+      if (node.cats.length > 1 && c1 !== c2) {
+        drawSplitCircle(x, y, isHov ? r * 1.3 : r, c1, c2);
+      } else {
+        ctx.beginPath();
+        ctx.arc(x, y, isHov ? r * 1.3 : r, 0, Math.PI*2);
+        ctx.fillStyle = c1;
+        ctx.fill();
+      }
+
+      // Border
+      ctx.beginPath();
+      ctx.arc(x, y, isHov ? r * 1.3 : r, 0, Math.PI*2);
+      ctx.strokeStyle = isHov ? '#d4a843' : 'rgba(0,0,0,0.5)';
+      ctx.lineWidth   = (isHov ? 1.8 : 1) / scale;
+      ctx.stroke();
+
+      // Label (show when zoomed in or hovered or highlighted)
+      const showLabel = scale > 0.9 || isHov || isHl;
+      if (showLabel) {
+        const fs = Math.max(9, Math.min(13, 11 / scale));
+        ctx.font = `400 ${fs}px 'Cormorant Garamond', serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = isHov ? '#fff' : (isHl ? '#d4a843' : 'rgba(220,216,204,0.85)');
+        // Slight background for readability
+        const tw = ctx.measureText(node.name).width;
+        ctx.fillStyle = 'rgba(8,9,12,0.55)';
+        ctx.fillRect(x - tw/2 - 2, y + r + 3, tw + 4, fs + 2);
+        ctx.fillStyle = isHov ? '#fff' : (isHl ? '#d4a843' : 'rgba(220,216,204,0.85)');
+        ctx.fillText(node.name, x, y + r + 4);
+      }
+    }
+
+    ctx.globalAlpha = 1;
+  });
+
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════
+// ANIMATION LOOP
+// ═══════════════════════════════════════
+let rafId;
+function loop() {
+  stepPhysics();
+  draw();
+  rafId = requestAnimationFrame(loop);
+}
+
+// ═══════════════════════════════════════
+// INTERACTION
+// ═══════════════════════════════════════
+function screenToWorld(sx, sy) {
+  return { x: (sx - tx) / scale, y: (sy - ty) / scale };
+}
+
+function nodeAtScreen(sx, sy) {
+  const w = screenToWorld(sx, sy);
+  let best = -1, bestD2 = Infinity;
+  ALL_NODES.forEach((node, i) => {
+    const r  = nodeRadius(node) / scale;
+    const dx = pos[i].x - w.x, dy = pos[i].y - w.y;
+    const d2 = dx*dx + dy*dy;
+    if (d2 < r*r*4 && d2 < bestD2) { bestD2 = d2; best = i; }
+  });
+  return best;
+}
+
+// Mouse
+wrap.addEventListener('mousedown', e => {
+  dragging  = true;
+  dragStart = { x: e.clientX, y: e.clientY };
+  txStart   = tx; tyStart = ty;
+});
+
+wrap.addEventListener('mousemove', e => {
+  if (dragging) {
+    tx = txStart + (e.clientX - dragStart.x);
+    ty = tyStart + (e.clientY - dragStart.y);
+    simRunning = true;
+    return;
+  }
+  const rect = wrap.getBoundingClientRect();
+  const idx  = nodeAtScreen(e.clientX - rect.left, e.clientY - rect.top);
+  hoveredIdx = idx;
+
+  const tip = document.getElementById('tooltip');
+  if (idx >= 0) {
+    const node = ALL_NODES[idx];
+    document.getElementById('tip-name').textContent  = node.name;
+    document.getElementById('tip-cats').textContent  = node.isGhost ? 'CONNECTED FIGURE' : node.cats.join(' · ');
+    document.getElementById('tip-hl').textContent    = node.hl || '';
+    document.getElementById('tip-ghost').textContent = node.isGhost ? 'Referenced but not profiled' : '';
+    document.getElementById('tip-click').textContent = node.isGhost ? '' : '↗ click to open full profile';
+    tip.style.opacity = '1';
+    tip.style.left = (e.clientX + 16) + 'px';
+    tip.style.top  = (e.clientY - 10) + 'px';
+    wrap.style.cursor = node.isGhost ? 'default' : 'pointer';
+  } else {
+    tip.style.opacity = '0';
+    wrap.style.cursor = 'grab';
+  }
+});
+
+wrap.addEventListener('mouseup', e => {
+  const wasDrag = dragging && (
+    Math.abs(e.clientX - dragStart.x) > 4 ||
+    Math.abs(e.clientY - dragStart.y) > 4
+  );
+  dragging = false;
+  if (wasDrag) return;
+
+  const rect = wrap.getBoundingClientRect();
+  const idx  = nodeAtScreen(e.clientX - rect.left, e.clientY - rect.top);
+  if (idx >= 0 && !ALL_NODES[idx].isGhost) {
+    openPersonTab(ALL_NODES[idx]);
+  }
+});
+
+wrap.addEventListener('mouseleave', () => {
+  dragging = false;
+  hoveredIdx = -1;
+  document.getElementById('tooltip').style.opacity = '0';
+});
+
+wrap.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = wrap.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  const f  = e.deltaY < 0 ? 1.12 : 0.89;
+  tx = mx - f * (mx - tx);
+  ty = my - f * (my - ty);
+  scale = Math.min(5, Math.max(0.15, scale * f));
+  simRunning = true;
+}, { passive: false });
+
+// Controls
+document.getElementById('zoom-in').addEventListener('click', () => {
+  const f = 1.25;
+  tx = W/2 - f*(W/2 - tx);
+  ty = H/2 - f*(H/2 - ty);
+  scale = Math.min(5, scale * f);
+});
+document.getElementById('zoom-out').addEventListener('click', () => {
+  const f = 0.8;
+  tx = W/2 - f*(W/2 - tx);
+  ty = H/2 - f*(H/2 - ty);
+  scale = Math.max(0.15, scale * f);
+});
+document.getElementById('reset').addEventListener('click', () => {
+  tx = W/2; ty = H/2; scale = 1;
+  simRunning = true;
+});
+
+// Search
+document.getElementById('search').addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  highlighted.clear();
+  if (q.length > 1) {
+    ALL_NODES.forEach((n, i) => {
+      if (n.name.toLowerCase().includes(q)) highlighted.add(i);
+    });
+  }
+  simRunning = true;
+});
+
+// Resize
+window.addEventListener('resize', () => {
+  W = wrap.clientWidth;
+  H = wrap.clientHeight;
+  canvas.width  = W;
+  canvas.height = H;
+  simRunning = true;
+});
+
+// ═══════════════════════════════════════
+// LEGEND
+// ═══════════════════════════════════════
+function buildLegend() {
+  const div = document.getElementById('legend');
+  const used = new Set();
+  PEOPLE.forEach(p => p.cats.forEach(c => used.add(c)));
+  [...used].sort().forEach(cat => {
+    const item = document.createElement('div');
+    item.className = 'leg';
+    item.innerHTML = `<span class="leg-dot" style="background:${CAT_COLOR[cat]||'#888'}"></span>${cat}`;
+    div.appendChild(item);
+  });
+  // Ghost
+  const g = document.createElement('div');
+  g.className = 'leg';
+  g.innerHTML = `<span class="leg-dot" style="background:#2a2a2a;border:1px solid #444"></span>Referenced figure`;
+  div.appendChild(g);
+}
+
+// ═══════════════════════════════════════
+// PERSON PAGE (new tab)
+// ═══════════════════════════════════════
+function openPersonTab(person) {
+  const CAT_COLOR_LOCAL = {
+    Heroes:'#4a8fd4',Innovators:'#e8a838',Entertainment:'#d45a8a',
+    Business:'#48c97a',Healers:'#6cbfcc',Teachers:'#a07be0',
+    Athletes:'#e06840',Villains:'#d44040',Pioneers:'#70b870',
+    Influencers:'#c890d8',Spies:'#889898',Aviators:'#80b8e8',
+    Science:'#f0d060',Statesman:'#98b0d8',Music:'#f090a0'
+  };
+  const c1 = CAT_COLOR_LOCAL[person.cats[0]] || '#888';
+  const c2 = person.cats[1] ? (CAT_COLOR_LOCAL[person.cats[1]] || c1) : c1;
+
+  // Hero
+  document.getElementById('panel-hero').style.background =
+    `linear-gradient(135deg,#08090c 0%,${c1}12 45%,${c2}10 75%,#08090c 100%)`;
+  document.getElementById('panel-hl').style.color = c1;
+
+  // Badges
+  const badgesEl = document.getElementById('panel-badges');
+  badgesEl.innerHTML = person.cats.map((cat, i) => {
+    const col = i === 0 ? c1 : c2;
+    return `<span class="p-badge" style="color:${col};border-color:${col}40;background:${col}14">${cat}</span>`;
+  }).join('');
+
+  document.getElementById('panel-name').textContent = person.name;
+  document.getElementById('panel-hl').textContent   = person.hl || '';
+
+  // Body
+  const body = document.getElementById('panel-body');
+  body.innerHTML = '';
+
+  // Links section
+  const linksDiv = document.createElement('div');
+  linksDiv.className = 'p-section';
+  linksDiv.innerHTML = '<h2>Explore Further</h2>';
+  if (person.wiki) {
+    const wn = encodeURIComponent(person.name.replace(/ /g,'_'));
+    linksDiv.innerHTML += `<a class="p-ext-link" href="https://en.wikipedia.org/wiki/${wn}" target="_blank" style="color:${c1};border-color:${c1}40;background:${c1}10">↗ Wikipedia</a>`;
+  }
+  linksDiv.innerHTML += `<a class="p-ext-link" href="https://www.google.com/search?q=${encodeURIComponent(person.name+' American history')}" target="_blank" style="color:${c1};border-color:${c1}40;background:${c1}10">↗ Google Search</a>`;
+  body.appendChild(linksDiv);
+
+  // Connections
+  const idx = ALL_NODES.indexOf(person);
+  const connIdxs = EDGES
+    .filter(([a,b]) => a === idx || b === idx)
+    .map(([a,b]) => a === idx ? b : a);
+
+  if (connIdxs.length) {
+    const connDiv = document.createElement('div');
+    connDiv.className = 'p-section';
+    connDiv.innerHTML = '<h2>Connections</h2><div class="p-conn-grid" id="p-conn-grid"></div>';
+    body.appendChild(connDiv);
+    const grid = connDiv.querySelector('#p-conn-grid');
+    connIdxs.forEach(ci => {
+      const cn = ALL_NODES[ci];
+      const cc = cn.cats[0] ? (CAT_COLOR_LOCAL[cn.cats[0]] || '#888') : '#444';
+      const chip = document.createElement('div');
+      chip.className = 'p-conn-chip' + (cn.isGhost ? ' ghost' : '');
+      chip.style.borderColor = cn.isGhost ? '#333' : cc + '50';
+      chip.innerHTML = `<span class="p-conn-name" style="color:${cn.isGhost?'#444':cc}">${cn.name}</span><span class="p-conn-cat">${cn.isGhost?'referenced figure':cn.cats[0]}</span>`;
+      if (!cn.isGhost) chip.addEventListener('click', () => openPersonTab(cn));
+      grid.appendChild(chip);
+    });
+  }
+
+  // Open overlay
+  const overlay = document.getElementById('overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// ═══════════════════════════════════════
+// INIT
+buildLegend();
+
+// Overlay close handlers
+document.getElementById('panel-close').addEventListener('click', () => {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = 'hidden';
+});
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) {
+    document.getElementById('overlay').classList.remove('open');
+    document.body.style.overflow = 'hidden';
+  }
+});
+
+initPhysics();
+loop();
+</script>
+</body>
+</html>
